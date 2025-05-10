@@ -1,18 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useRoutes } from "react-router-dom";
 
-// Pages List
+// Pages
 import Dashboard from "./components/dashboard/Dashboard";
 import Profile from "./components/user/Profile";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
+import CreateRepo from "./components/repo/CreateRepo";
 
 // Auth Context
 import { useAuth } from "./authContext";
 
 const ProjectRoutes = () => {
   const { currentUser, setCurrentUser } = useAuth();
+  const [repoData, setRepoData] = useState([]);
   const navigate = useNavigate();
+
+  const handleCreate = (data) => {
+    console.log("Repo Created:", data);
+    setRepoData((prev) => [...prev, data]);
+    alert(`Repository "${data.name}" created successfully!`);
+    navigate("/"); // Redirect after creation (optional)
+  };
 
   useEffect(() => {
     const userIdFromStorage = localStorage.getItem("userId");
@@ -22,7 +31,7 @@ const ProjectRoutes = () => {
     }
 
     if (!userIdFromStorage && !["/auth", "/signup"].includes(window.location.pathname)) {
-      setTimeout(() => navigate("/auth"), 0); // Avoid direct navigation inside useEffect
+      setTimeout(() => navigate("/signup"), 0);
     }
 
     if (userIdFromStorage && window.location.pathname === "/auth") {
@@ -30,11 +39,15 @@ const ProjectRoutes = () => {
     }
   }, [currentUser, navigate, setCurrentUser]);
 
-  let element = useRoutes([
+  const element = useRoutes([
     { path: "/", element: <Dashboard /> },
     { path: "/auth", element: <Login /> },
     { path: "/signup", element: <Signup /> },
     { path: "/profile", element: <Profile /> },
+    {
+      path: "/create",
+      element: <CreateRepo onCreate={handleCreate} />, // ✅ Prop passed correctly
+    },
   ]);
 
   return element;

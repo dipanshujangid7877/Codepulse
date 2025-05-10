@@ -38,6 +38,7 @@
     align-items: center;
     flex-direction: column;
     gap: 30px;
+    
   }
   
   .input {
@@ -52,6 +53,7 @@
     transition: border-color 0.3s cubic-bezier(0.25, 0.01, 0.25, 1) 0s,
       color 0.3s cubic-bezier(0.25, 0.01, 0.25, 1) 0s,
       background 0.2s cubic-bezier(0.25, 0.01, 0.25, 1) 0s;
+      
   }
   
   .label {
@@ -81,7 +83,7 @@
   
   .submit-btn:hover {
     background-color: #499458;
-    cursor: pointer;
+    cursor: pointer; 
   }
   
   .passkey-signin {

@@ -1,42 +1,49 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../authContext";
-
-import { PageHeader } from "@primer/react";
-import { Box, Button } from "@primer/react";
-import "./auth.css";
-
-import logo from "../../assets/github-mark-white.svg";
+import { PageHeader, Box, Button } from "@primer/react";
 import { Link } from "react-router-dom";
+import "./auth.css";
+import logo from "../../assets/github-mark-white.svg";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
   const { setCurrentUser } = useAuth();
 
   const handleSignup = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent form refresh
+
+    // Simple validation (optional)
+    if (!email || !password || !username) {
+      alert("All fields are required");
+      return;
+    }
+    console.log(email);
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:3002/signup", {
-        email,
-        password,
-        username,
-      });
+
+      const res = await axios.post(
+        // If using a proxy in package.json: use "/signup"
+        "http://localhost:3002/signup",
+        {
+          email,
+          password,
+          username,
+        }
+      );
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId);
-
       setCurrentUser(res.data.userId);
       setLoading(false);
 
       window.location.href = "/";
     } catch (err) {
-      console.error(err);
+      console.error("Signup error:", err.response?.data || err.message);
       alert("Signup Failed!");
       setLoading(false);
     }
@@ -55,7 +62,8 @@ const Signup = () => {
           </Box>
         </div>
 
-        <div className="login-box">
+        {/* ✅ Use form tag here */}
+        <form onSubmit={handleSignup} className="login-box">
           <div>
             <label className="label">Username</label>
             <input
@@ -99,11 +107,11 @@ const Signup = () => {
             variant="primary"
             className="login-btn"
             disabled={loading}
-            onClick={handleSignup}
+            type="submit" // ✅ Important for form submission
           >
             {loading ? "Loading..." : "Signup"}
           </Button>
-        </div>
+        </form>
 
         <div className="pass-box">
           <p>

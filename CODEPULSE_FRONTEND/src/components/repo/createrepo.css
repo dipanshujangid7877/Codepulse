@@ -1,0 +1,74 @@
+.create-repo-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    background-color: #f9f9f9;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .create-repo-container h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  .repo-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .repo-form label {
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  
+  .repo-form input[type="text"],
+  .repo-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 0.3rem;
+  }
+  
+  .repo-form textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .create-btn {
+    padding: 0.75rem;
+    background-color: #2ea44f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .create-btn:hover {
+    background-color: #22863a;
+  }
+  
+  .required {
+    color: red;
+    margin-left: 4px;
+  }
+  
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center; /* Horizontal center */
+    align-items: center;     /* Vertical center */
+
+  }
