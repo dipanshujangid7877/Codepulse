@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose; 
+const { Schema } = mongoose;
 
 const RepositorySchema = new Schema(
   {
@@ -13,7 +13,12 @@ const RepositorySchema = new Schema(
     },
     content: [
       {
-        type: String,
+        fileName: String,
+        cloudinaryUrl: String,
+        uploadedAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
     visibility: {
@@ -31,7 +36,7 @@ const RepositorySchema = new Schema(
       },
     ],
   },
-  { timestamps: true } 
+  { timestamps: true }
 );
 
 const Repository = mongoose.model("Repository", RepositorySchema);

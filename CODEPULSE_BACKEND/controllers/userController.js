@@ -24,7 +24,7 @@ async function signup(req, res) {
 
   try {
     await connectClient();
-    const db = client.db("githubclone");
+    const db = client.db("codepulse");
     const usersCollection = db.collection("users");
 
     // Check if user already exists by username or email

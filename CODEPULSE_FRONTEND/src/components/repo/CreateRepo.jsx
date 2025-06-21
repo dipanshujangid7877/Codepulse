@@ -1,27 +1,62 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./CreateRepo.css";
 
 const CreateRepo = ({ onCreate }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
-  // Temporary hardcoded owner ID (replace with logged-in user's ID dynamically)
-  const ownerId = "662f3f3fd0ea1570205d5e97";
+  // TODO: Replace with dynamic logged-in user ID
+  const ownerId = "6824d62cf310111065661a2e";
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    setFiles(Array.from(e.target.files));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!name.trim()) {
       alert("Repository name is required!");
       return;
     }
 
+    setUploading(true);
+
+    // Upload files to Cloudinary
+    const uploadedContent = [];
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "your_upload_preset"); // Set your Cloudinary upload preset
+
+      try {
+        const response = await axios.post(
+          "https://api.cloudinary.com/v1_1/your_cloud_name/auto/upload",
+          formData
+        );
+
+        uploadedContent.push({
+          fileName: file.name,
+          cloudinaryUrl: response.data.secure_url,
+        });
+      } catch (err) {
+        console.error("File upload error:", err);
+        alert(`Failed to upload file: ${file.name}`);
+        setUploading(false);
+        return;
+      }
+    }
+
     const repoData = {
       name,
       description,
-      visibility: !isPrivate,      // correct field expected by backend
-      owner: ownerId,              // ensure owner is included to prevent 404
-      content: [],
+      visibility: !isPrivate,
+      owner: ownerId,
+      content: uploadedContent,
       issues: [],
     };
 
@@ -29,6 +64,8 @@ const CreateRepo = ({ onCreate }) => {
     setName("");
     setDescription("");
     setIsPrivate(false);
+    setFiles([]);
+    setUploading(false);
   };
 
   return (
@@ -55,6 +92,11 @@ const CreateRepo = ({ onCreate }) => {
           />
         </label>
 
+        <label>
+          Upload Files
+          <input type="file" multiple onChange={handleFileChange} />
+        </label>
+
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -64,8 +106,8 @@ const CreateRepo = ({ onCreate }) => {
           Private
         </label>
 
-        <button type="submit" className="create-btn">
-          Create Repository
+        <button type="submit" className="create-btn" disabled={uploading}>
+          {uploading ? "Uploading..." : "Create Repository"}
         </button>
       </form>
     </div>

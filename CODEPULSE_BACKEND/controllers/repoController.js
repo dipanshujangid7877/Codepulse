@@ -21,10 +21,9 @@ async function createRepository(req, res) {
       description,
       visibility,
       owner,
-      content: content || [],
-      issues: issues || [],
+      content: Array.isArray(content) ? content : [],
+      issues: Array.isArray(issues) ? issues : [],
     });
-   
 
     const result = await newRepository.save();
 
@@ -37,8 +36,6 @@ async function createRepository(req, res) {
     res.status(500).send("Server error");
   }
 }
-
-
 
 // Get all repositories
 async function getAllRepositories(req, res) {
@@ -133,8 +130,16 @@ async function updateRepositoryById(req, res) {
       return res.status(404).json({ error: "Repository not found!" });
     }
 
-    if (content) {
-      repository.content.push(content);
+    // Push each file object to content if valid
+    if (content && Array.isArray(content)) {
+      content.forEach(file => {
+        if (file.fileName && file.cloudinaryUrl) {
+          repository.content.push({
+            fileName: file.fileName,
+            cloudinaryUrl: file.cloudinaryUrl,
+          });
+        }
+      });
     }
 
     if (description) {
