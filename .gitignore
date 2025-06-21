@@ -1,0 +1,12 @@
+# Ignore node_modules in both backend and frontend
+codepulse-backend/node_modules/
+codepulse-frontend/node_modules/
+
+# Ignore environment files
+codepulse-backend/.env
+codepulse-frontend/.env
+
+# Ignore logs, build artifacts, etc.
+*.log
+dist/
+build/
